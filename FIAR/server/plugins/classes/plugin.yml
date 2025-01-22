@@ -1,0 +1,4 @@
+name: FIAR
+version: '1.0-SNAPSHOT'
+main: org.seblax.four
+api-version: '1.21'
