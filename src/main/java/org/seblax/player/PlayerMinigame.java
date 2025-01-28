@@ -1,10 +1,8 @@
-package org.seblax;
+package org.seblax.player;
 
 import org.bukkit.*;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 import org.bukkit.inventory.meta.ItemMeta;
@@ -16,7 +14,7 @@ import java.util.UUID;
 
 public class PlayerMinigame {
 
-    UUID player;
+    UUID player = null;
     Team team;
 
     public PlayerMinigame(UUID p, Team t){
@@ -26,14 +24,20 @@ public class PlayerMinigame {
         SetInventory();
     }
 
+    public UUID getPlayerUUID(){
+        return player;
+    }
+
     public Entity GetEntity(){
         return Bukkit.getEntity(this.player);
     }
 
     void SetInventory(){
-        Player p = (Player)GetEntity();
-        TeamColor teamcolor = team.armorStandUtil.CurrentColor();
-        String pieceName = (teamcolor.getColorName() + "_concrete_powder").toUpperCase();
+        if(!(GetEntity() instanceof Player p)){
+            return;
+        }
+
+        TeamColor teamcolor = team.getTeamColor();
         String ui_1 = ("black_stained_glass_pane").toUpperCase();
         String ui_2 = (teamcolor.getColorName() + "_stained_glass_pane").toUpperCase();
         String exit = ("barrier").toUpperCase();
@@ -46,9 +50,6 @@ public class PlayerMinigame {
         }
 
         for (int i = 0; i < 9; i++){
-//            ItemStack item = SetItem(pieceName, teamcolor.getChatColor()+ "" + ChatColor.BOLD + "Piece");
-//            p.getInventory().setItem(i,item);
-
             String command = "item replace entity " + p.getName() +
                     " container." + i  + " with " + teamcolor.getColorName() + "_concrete_powder" +
                     "[can_place_on={predicates:[{blocks:[\"minecraft:black_terracotta\",\"minecraft:gray_terracotta\"]}],show_in_tooltip:true},custom_name='[\"\",{\"text\":\"Piece\",\"italic\":false,\"color\":\"" +
@@ -61,7 +62,7 @@ public class PlayerMinigame {
         ItemStack item = SetItem(exit, ChatColor.DARK_RED + "" + ChatColor.BOLD + "Exit");
         p.getInventory().setItem(22,item);
 
-        ItemStack helmet = SetItem((teamcolor.getColorName() + "_stained_glass").toUpperCase(), team.armorStandUtil.CurrentColor().getChatColor()+ "" + ChatColor.BOLD + team.armorStandUtil.name);
+        ItemStack helmet = SetItem((teamcolor.getColorName() + "_stained_glass").toUpperCase(), team.getTeamColor().getChatColor()+ "" + ChatColor.BOLD + team.getName());
         ItemStack chestPlate = SetArmor(teamcolor.getColor(), Material.LEATHER_CHESTPLATE);
         ItemStack leggings = SetArmor(teamcolor.getColor(), Material.LEATHER_LEGGINGS);
         ItemStack boots = SetArmor(teamcolor.getColor(), Material.LEATHER_BOOTS);
@@ -86,7 +87,7 @@ public class PlayerMinigame {
         ItemStack res = new ItemStack(material);
         LeatherArmorMeta resMeta = (LeatherArmorMeta) res.getItemMeta();
 
-        resMeta.setItemName(team.armorStandUtil.CurrentColor().getChatColor()+ "" + ChatColor.BOLD + team.armorStandUtil.name);
+        resMeta.setItemName(team.getTeamColor().getChatColor()+ "" + ChatColor.BOLD + team.getName());
         resMeta.setColor(color);
 
         res.setItemMeta(resMeta);

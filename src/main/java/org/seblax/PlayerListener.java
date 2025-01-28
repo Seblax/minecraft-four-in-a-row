@@ -1,26 +1,26 @@
-﻿package org.seblax;
+package org.seblax;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.util.Vector;
 import org.seblax.team.Team;
-import org.seblax.team.TeamColor;
-import org.seblax.utils.Coord;
 
 public class PlayerListener implements Listener {
 
-    private JavaPlugin plugin;
+    private final JavaPlugin plugin;
 
     public PlayerListener(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -31,18 +31,12 @@ public class PlayerListener implements Listener {
         ItemStack item = event.getCurrentItem();
         Player player = (Player) event.getWhoClicked();
 
-        if(!player.getScoreboardTags().contains("Player4x4")) return;
+        if (!player.getScoreboardTags().contains("Player4x4")) return;
 
         event.setCancelled(true);
 
-        if (item != null && item.getType() == Material.BARRIER) {
-
-            Team currentTeam = player.getScoreboardTags().contains("1") ? Data.team1 : Data.team2;
-            if(!currentTeam.block) return;
-
-            currentTeam.UnLock(player);
-            player.getInventory().clear();
-        }
+        if (item.getType() != Material.BARRIER) return;
+        Data.Teams.manager.PlayerLeavesTeam(player);
     }
 
     @EventHandler
@@ -50,14 +44,30 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
         Location playerLocation = player.getLocation();
 
-        ArmorStand armorStandTeam1 = Data.team1.armorStandUtil.GetArmorStand();
-        ArmorStand armorStandTeam2 = Data.team2.armorStandUtil.GetArmorStand();
+        double distancePlayerToA = Data.Teams.TEAM_A_ARMORSTAND_COORD.toLocation().distance(playerLocation);
+        double distancePlayerToB = Data.Teams.TEAM_B_ARMORSTAND_COORD.toLocation().distance(playerLocation);
 
-            if (armorStandTeam1 != null && !Data.team1.block && armorStandTeam1.getLocation().distance(playerLocation) <= 0.5) {
-                Data.team1.Lock(player,new Coord(-237.5, 68.0, -45.5), -90);
-            }else if(armorStandTeam2 != null && !Data.team2.block&& armorStandTeam2.getLocation().distance(playerLocation) <= 0.5){
-                Data.team2.Lock(player,new Coord(-225.5, 68.0, -45.5), 90);
+        if (distancePlayerToA <= 0.5 || distancePlayerToB <= 0.5) {
+            Data.Teams.manager.setPlayerTeamByLocation(player);
         }
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+
+        if (!player.getScoreboardTags().contains("Player4x4")) return;
+
+        player.removeScoreboardTag("Player4x4");
+        player.getInventory().clear();
+        player.teleport(Data.Teams.TEAMS_EXIT_COORD.toLocation());
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+
+        Data.Teams.manager.getTeamByPlayer(player).resetTeam();
     }
 
     @EventHandler
@@ -65,32 +75,41 @@ public class PlayerListener implements Listener {
         Location blockLocation = event.getBlock().getLocation();
         Player player = event.getPlayer();
 
-        if(!player.getScoreboardTags().contains("Player4x4")) return;
+        if (!player.getScoreboardTags().contains("Player4x4")) return;
 
         event.setCancelled(true);
 
-        if (blockLocation.getBlockZ() <= -43 && blockLocation.getBlockZ() >= -49) {
-            int offset = blockLocation.getBlockZ();
+        int x = blockLocation.getBlockX();
+        int z = blockLocation.getBlockZ();
 
-            if(blockLocation.getBlockX() == -235) {
-                SummonFallingSand(offset,Data.team1.armorStandUtil.CurrentColor());
-                four.game.SetCasilla(blockLocation.getBlockZ(),1);
+        if (z <= -43 && z >= -49) {
+            int position = -43 - z;
+            Team playerTeam = four.game.currentTurnTeam;
+            boolean placed = false;
+
+            if (!four.game.canPlace || !playerTeam.isPlayersTeam(player)) {
+                player.sendMessage(ChatColor.DARK_RED + "" + ChatColor.BOLD + "It's not your turn yet!");
+                return;
+            }
+            ;
+
+            if (x == -235 || x == -229) {
+                placed = four.game.setTile(position, z, playerTeam.getTeamColor().getColorName());
+                four.game.canPlace = !placed;
             }
 
-            if(blockLocation.getBlockX() == -229){
-                SummonFallingSand(offset,Data.team2.armorStandUtil.CurrentColor());
-                four.game.SetCasilla(blockLocation.getBlockZ(),2);
+            if (!placed) {
+                player.sendMessage(ChatColor.DARK_RED + "" + ChatColor.BOLD + "You can't place a piece in this column!");
             }
         }
     }
 
-    void SummonFallingSand(int offset, TeamColor color){
-        Coord FallingSandLocation = new Coord(-231.5, 76., offset + 0.5);
-        Material fallingBlockMaterial = Material.valueOf((color.getColorName() + "_concrete_powder").toUpperCase());
-        FallingBlock fallingBlock = Data.CurrentWorld.spawnFallingBlock(FallingSandLocation.toLocation(), fallingBlockMaterial.createBlockData());
-
-        // Configurar propiedades del FallingBlock
-        fallingBlock.setDropItem(false); // Evita que suelte el bloque al caer
-        fallingBlock.setHurtEntities(true); // Opcional: puede dañar entidades al impactar
+    @EventHandler
+    public void SetPieceInGround(EntityChangeBlockEvent event) {
+        if (event.getEntity() instanceof FallingBlock && event.getEntity().getScoreboardTags().contains("4x4")) {
+            Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
+                four.game.NextRound();
+            }, 10L);
+        }
     }
 }

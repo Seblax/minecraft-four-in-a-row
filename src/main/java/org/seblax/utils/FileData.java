@@ -18,7 +18,7 @@ public class FileData {
         File dataFolder = plugin;
 
         if (!dataFolder.exists()) {
-            dataFolder.mkdirs(); // Crea el directorio si no existe
+            dataFolder.mkdirs();
         }
 
         this.file =  new File(plugin, f);
@@ -36,7 +36,7 @@ public class FileData {
         this.modyFile = YamlConfiguration.loadConfiguration(file);
     }
 
-    public void Set(String k, Object v) {
+    public void set(String k, Object v) {
         this.modyFile.set(k,v);
         try {
             this.modyFile.save(this.file);
@@ -46,7 +46,7 @@ public class FileData {
         }
     }
 
-    public Object Get(String k) {
+    public Object get(String k) {
         return this.modyFile.get(k);
     }
 }

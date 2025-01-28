@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public class ArmorStandRotator {
-    private UUID uuid;
+    private final UUID uuid;
     private final double rotationSpeed = 2.5f;
 
     public ArmorStandRotator(UUID armorStand) {
