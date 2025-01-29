@@ -34,7 +34,7 @@ public final class four extends JavaPlugin {
         }
 
         getServer().getPluginManager().registerEvents(new ArmorStandListener(), this);
-        getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
+        getServer().getPluginManager().registerEvents(new GameListener(this), this);
 
         Initialize();
     }

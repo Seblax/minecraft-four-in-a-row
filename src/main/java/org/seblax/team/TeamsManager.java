@@ -1,7 +1,10 @@
 package org.seblax.team;
 
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.seblax.Data;
+import org.seblax.utils.SoundManager;
 
 import java.util.UUID;
 
@@ -39,18 +42,31 @@ public class TeamsManager {
         teamSelected.changeTeamColor(getEnemyTeamByUUID(teamSelected));
         teamSelected.updateScenario();
         teamSelected.getArmorStandUtil().getArmorStandParticle().ArmorStandSelected();
+
+        //Select sound effect
+        SoundManager.playSound(teamSelected.getArmorStand().getLocation(), Sound.BLOCK_AMETHYST_BLOCK_FALL, SoundCategory.AMBIENT);
+        SoundManager.playSound(teamSelected.getArmorStand().getLocation(), Sound.UI_BUTTON_CLICK,SoundCategory.AMBIENT);
+        SoundManager.playSound(teamSelected.getArmorStand().getLocation(), Sound.UI_TOAST_IN,SoundCategory.AMBIENT, 1, 0);
     }
 
-    public void setPlayerTeamByLocation(Player player){
+    public void PlayerJoinsTeam(Player player){
         Team playerTeam = player.getLocation()
                 .distance(Data.Teams.TEAM_A_ARMORSTAND_COORD.toLocation()) < player.getLocation().distance(Data.Teams.TEAM_B_ARMORSTAND_COORD.toLocation()) ? teamA : teamB;
         playerTeam.lock(player);
+
+        SoundManager.Player.playSound(player,Sound.UI_TOAST_IN,SoundCategory.PLAYERS);
+        SoundManager.Player.playSound(player,Sound.BLOCK_NOTE_BLOCK_BIT,SoundCategory.PLAYERS);
+        SoundManager.Player.playSound(player,Sound.ENTITY_ENDERMAN_TELEPORT,SoundCategory.PLAYERS);
     }
 
     public void PlayerLeavesTeam(Player player){
         Team playerTeam = getTeamByPlayer(player);
         if(!playerTeam.isLocked()) return;
         playerTeam.unlock(player);
+
+        SoundManager.Player.playSound(player,Sound.UI_TOAST_OUT,SoundCategory.PLAYERS,1,0);
+        SoundManager.Player.playSound(player,Sound.BLOCK_NOTE_BLOCK_BIT,SoundCategory.PLAYERS,1,0);
+        SoundManager.Player.playSound(player,Sound.ENTITY_ENDERMAN_TELEPORT,SoundCategory.PLAYERS,1,0);
     }
 
     public void remove(){

@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.seblax.team.Team;
 import org.seblax.team.TeamColor;
 import org.seblax.utils.Coord;
+import org.seblax.utils.SoundManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,6 +87,10 @@ public class Game {
 
         EndTitle(title,subtitle);
         this.canPlace = false;
+
+        SoundManager.playSound(new Coord(-232, 71, -46).toLocation(),Sound.UI_TOAST_CHALLENGE_COMPLETE,SoundCategory.AMBIENT);
+        SoundManager.playSound(new Coord(-232, 71, -46).toLocation(),Sound.ENTITY_PLAYER_LEVELUP,SoundCategory.AMBIENT);
+        SoundManager.playSound(new Coord(-232, 71, -46).toLocation(),Sound.ENTITY_VILLAGER_YES,SoundCategory.AMBIENT);
     }
 
     void GameDraw(){
@@ -99,6 +104,10 @@ public class Game {
         EndTitle(title,title);
 
         this.canPlace = false;
+
+        SoundManager.playSound(new Coord(-232, 71, -46).toLocation(),Sound.UI_TOAST_CHALLENGE_COMPLETE,SoundCategory.AMBIENT, 1,0);
+        SoundManager.playSound(new Coord(-232, 71, -46).toLocation(),Sound.ENTITY_VILLAGER_NO,SoundCategory.AMBIENT,1,1);
+        SoundManager.playSound(new Coord(-232, 71, -46).toLocation(),Sound.BLOCK_NOTE_BLOCK_BIT,SoundCategory.AMBIENT,1,0);
     }
 
     void EndTitle(String title, String subtitle){
@@ -252,16 +261,21 @@ public class Game {
     }
 
     void summonFallingSand(int offset, String colorName){
-        Coord fallingBlockLocation = new Coord(-231.5, 76., offset + 0.5);
+        Location fallingBlockLocation = new Coord(-231.5, 76., offset + 0.5).toLocation();
         Material fallingBlockMaterial = Material.valueOf((colorName + "_concrete_powder").toUpperCase());
-        FallingBlock fallingBlock = Data.CURRENT_WORLD.spawnFallingBlock(fallingBlockLocation.toLocation(), fallingBlockMaterial.createBlockData());
+        FallingBlock fallingBlock = Data.CURRENT_WORLD.spawnFallingBlock(fallingBlockLocation, fallingBlockMaterial.createBlockData());
 
         Color particleColor = this.currentTurnTeam.getTeamColor().getColor();
 
-        Data.CURRENT_WORLD.spawnParticle(Particle.DUST, fallingBlockLocation.toLocation(), 100,0.5,0.5,0.5, new Particle.DustOptions(particleColor, (float) (1 + 5*Math.random())));
+        Data.CURRENT_WORLD.spawnParticle(Particle.DUST, fallingBlockLocation, 100,0.5,0.5,0.5, new Particle.DustOptions(particleColor, 1));
 
         fallingBlock.addScoreboardTag("4x4");
         fallingBlock.setDropItem(false);
         fallingBlock.setHurtEntities(true);
+
+        SoundManager.playSound(fallingBlockLocation,Sound.ENTITY_GUARDIAN_DEATH,SoundCategory.AMBIENT,1,2);
+        SoundManager.playSound(fallingBlockLocation,Sound.BLOCK_NOTE_BLOCK_BIT,SoundCategory.AMBIENT,1,0);
+        SoundManager.playSound(fallingBlockLocation,Sound.BLOCK_AMETHYST_BLOCK_FALL,SoundCategory.AMBIENT,1,1);
+        SoundManager.playSound(fallingBlockLocation,Sound.UI_TOAST_IN,SoundCategory.AMBIENT);
     }
 }
