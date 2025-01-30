@@ -82,10 +82,10 @@ public class GameListener implements Listener {
 
         if (z <= -43 && z >= -49) {
             int position = -43 - z;
-            Team playerTeam = four.game.currentTurnTeam;
+            Team playerTeam = four.game.getCurrentTurnTeam();
             boolean placed = false;
 
-            if (!four.game.canPlace || !playerTeam.isPlayersTeam(player)) {
+            if (!four.game.canPlace() || !playerTeam.isPlayersTeam(player)) {
                 player.sendMessage(ChatColor.DARK_RED + "" + ChatColor.BOLD + "It's not your turn yet!");
                 ErrorSound(player);
                 return;
@@ -94,7 +94,7 @@ public class GameListener implements Listener {
 
             if (x == -235 || x == -229) {
                 placed = four.game.setTile(position, z, playerTeam.getTeamColor().getColorName());
-                four.game.canPlace = !placed;
+                four.game.canPlace(!placed);
             }
 
             if (!placed) {
@@ -124,7 +124,7 @@ public class GameListener implements Listener {
                     0.5,
                     0.5,
                     new Particle.DustOptions(
-                            four.game.currentTurnTeam.getTeamColor().getColor(),
+                            four.game.getCurrentTurnTeam().getTeamColor().getColor(),
                             1));
 
             SoundManager.playSound(blockLocation, Sound.BLOCK_ANVIL_PLACE);
@@ -132,7 +132,7 @@ public class GameListener implements Listener {
             SoundManager.playSound(blockLocation, Sound.BLOCK_AMETHYST_BLOCK_FALL);
 
             Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
-                four.game.NextRound();
+                four.game.nextRound();
             }, 10L);
         }
     }

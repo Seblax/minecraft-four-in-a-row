@@ -42,7 +42,6 @@ public class FileData {
             this.modyFile.save(this.file);
         }catch (IOException e){
             System.out.println("Error saving file!");
-            return;
         }
     }
 

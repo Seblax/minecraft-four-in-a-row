@@ -11,6 +11,7 @@ import org.seblax.Data;
 import org.seblax.animations.ArmorStandParticles;
 import org.seblax.animations.ArmorStandRotator;
 import org.seblax.team.TeamColor;
+import org.seblax.utils.types.Coord;
 
 import java.io.IOException;
 import java.net.URL;

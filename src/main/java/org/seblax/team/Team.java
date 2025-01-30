@@ -9,7 +9,7 @@ import org.seblax.Game;
 import org.seblax.player.PlayerMinigame;
 import org.seblax.four;
 import org.seblax.utils.ArmorStandUtil;
-import org.seblax.utils.Coord;
+import org.seblax.utils.types.Coord;
 
 import java.util.UUID;
 /**

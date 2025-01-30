@@ -6,6 +6,7 @@ org\seblax\utils\SoundManager.class
 org\seblax\Data$SCENARIO_TEAM.class
 org\seblax\utils\ArmorStandUtil.class
 org\seblax\animations\AnimatorManager.class
+org\seblax\Data$BOARD.class
 org\seblax\animations\ArmorStandParticles.class
 org\seblax\team\Team.class
 org\seblax\player\PlayerMinigame.class
