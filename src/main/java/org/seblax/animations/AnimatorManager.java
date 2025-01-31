@@ -1,7 +1,7 @@
 package org.seblax.animations;
 
 import org.bukkit.scheduler.BukkitRunnable;
-import org.seblax.four;
+import org.seblax.Four;
 import org.seblax.utils.ArmorStandUtil;
 
 import java.util.HashSet;
@@ -41,7 +41,7 @@ public class AnimatorManager {
                     as.getArmorStandRotator().ArmorStandRotate();  // Calls the rotation animation for the Armor Stand.
                 }
             }
-        }.runTaskTimer(four.getInstance(), 0L, 1L);  // Runs the task every 1 tick (20 ticks per second).
+        }.runTaskTimer(Four.getInstance(), 0L, 1L);  // Runs the task every 1 tick (20 ticks per second).
     }
 }
 
@@ -50,7 +50,7 @@ public class AnimatorManager {
 //package org.seblax.animations;
 //
 //import org.bukkit.scheduler.BukkitRunnable;
-//import org.seblax.four;
+//import org.seblax.Four;
 //import org.seblax.utils.ArmorStandUtil;
 //
 //import java.util.HashSet;
@@ -72,6 +72,6 @@ public class AnimatorManager {
 //                    as.getArmorStandRotator().ArmorStandRotate();
 //                }
 //            }
-//        }.runTaskTimer(four.getInstance(), 0L, 1L);
+//        }.runTaskTimer(Four.getInstance(), 0L, 1L);
 //    }
 //}

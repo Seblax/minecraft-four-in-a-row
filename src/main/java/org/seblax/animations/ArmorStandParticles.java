@@ -6,7 +6,7 @@ import org.bukkit.Particle;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.seblax.Data;
 import org.seblax.utils.types.Coord;
-import org.seblax.four;
+import org.seblax.Four;
 
 /**
  * This class handles particle animations related to armor stands.
@@ -78,7 +78,7 @@ public class ArmorStandParticles {
                 }
             }
 
-        }.runTaskTimer(four.getInstance(), 0, 1);  // Run the task at regular intervals (every tick)
+        }.runTaskTimer(Four.getInstance(), 0, 1);  // Run the task at regular intervals (every tick)
     }
 
     /**
@@ -129,7 +129,7 @@ public class ArmorStandParticles {
 //import org.bukkit.scheduler.BukkitRunnable;
 //import org.seblax.Data;
 //import org.seblax.utils.types.Coord;
-//import org.seblax.four;
+//import org.seblax.Four;
 //
 //public class ArmorStandParticles {
 //
@@ -177,7 +177,7 @@ public class ArmorStandParticles {
 //                }
 //            }
 //
-//        }.runTaskTimer(four.getInstance(), 0, 1);
+//        }.runTaskTimer(Four.getInstance(), 0, 1);
 //    }
 //
 //    public void ArmorStandTeleport(Location l) {

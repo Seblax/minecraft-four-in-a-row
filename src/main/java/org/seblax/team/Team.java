@@ -5,9 +5,9 @@ import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.seblax.Data;
+import org.seblax.Four;
 import org.seblax.Game;
 import org.seblax.player.PlayerMinigame;
-import org.seblax.four;
 import org.seblax.utils.ArmorStandUtil;
 import org.seblax.utils.types.Coord;
 
@@ -156,8 +156,8 @@ public class Team {
 
         this.playerMinigame = new PlayerMinigame(player.getUniqueId(), this);
 
-        four.game = new Game();
-        four.game.clearBoard();
+        Four.game = new Game();
+        Four.game.clearBoard();
 
         // Update the team's ArmorStand
         this.armorStandUtil.setHead("27548362a24c0fa8453e4d93e68c5969ddbde57bf6666c0319c1ed1e84d89065");

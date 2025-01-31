@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.profile.PlayerProfile;
 import org.seblax.Data;
+import org.seblax.Four;
 import org.seblax.animations.ArmorStandParticles;
 import org.seblax.animations.ArmorStandRotator;
 import org.seblax.team.TeamColor;
@@ -39,7 +40,7 @@ public class ArmorStandUtil {
      * @param name  Name associated with the ArmorStand (team name).
      */
     public ArmorStandUtil(Coord coord, String name) {
-        int colorID = (int) new FileData(CONFIG_PATH).get(name.split(" ")[1]);
+        int colorID = (int) new FileData(CONFIG_PATH, Four.getInstance().getDataFolder()).get(name.split(" ")[1]);
         this.armorStand = (ArmorStand) Data.CURRENT_WORLD.spawnEntity(coord.toLocation(), EntityType.ARMOR_STAND);
         this.armorStandUUID = this.armorStand.getUniqueId();
         this.currentColor = TeamColor.of(colorID);
@@ -127,7 +128,7 @@ public class ArmorStandUtil {
         String helmet = currentColor.getColorName() + Data.TEAM_HEAD_ITEM;
         setHelmet(helmet.toUpperCase().trim());
 
-        new FileData(CONFIG_PATH).set(this.name.split(" ")[1], currentColor.getValue());
+        new FileData(CONFIG_PATH, Four.getInstance().getDataFolder()).set(this.name.split(" ")[1], currentColor.getValue());
     }
 
     /**

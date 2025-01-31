@@ -3,7 +3,7 @@ C:\Users\Corsair\Desktop\FIAR\src\main\java\org\seblax\animations\ArmorStandPart
 C:\Users\Corsair\Desktop\FIAR\src\main\java\org\seblax\animations\ArmorStandRotator.java
 C:\Users\Corsair\Desktop\FIAR\src\main\java\org\seblax\ArmorStandListener.java
 C:\Users\Corsair\Desktop\FIAR\src\main\java\org\seblax\Data.java
-C:\Users\Corsair\Desktop\FIAR\src\main\java\org\seblax\four.java
+C:\Users\Corsair\Desktop\FIAR\src\main\java\org\seblax\Four.java
 C:\Users\Corsair\Desktop\FIAR\src\main\java\org\seblax\Game.java
 C:\Users\Corsair\Desktop\FIAR\src\main\java\org\seblax\GameListener.java
 C:\Users\Corsair\Desktop\FIAR\src\main\java\org\seblax\player\PlayerMinigame.java
@@ -11,7 +11,7 @@ C:\Users\Corsair\Desktop\FIAR\src\main\java\org\seblax\team\Team.java
 C:\Users\Corsair\Desktop\FIAR\src\main\java\org\seblax\team\TeamColor.java
 C:\Users\Corsair\Desktop\FIAR\src\main\java\org\seblax\team\TeamsManager.java
 C:\Users\Corsair\Desktop\FIAR\src\main\java\org\seblax\utils\ArmorStandUtil.java
-C:\Users\Corsair\Desktop\FIAR\src\main\java\org\seblax\utils\Coord.java
 C:\Users\Corsair\Desktop\FIAR\src\main\java\org\seblax\utils\FileData.java
 C:\Users\Corsair\Desktop\FIAR\src\main\java\org\seblax\utils\SoundManager.java
-C:\Users\Corsair\Desktop\FIAR\src\main\java\org\seblax\utils\Triple.java
+C:\Users\Corsair\Desktop\FIAR\src\main\java\org\seblax\utils\types\Coord.java
+C:\Users\Corsair\Desktop\FIAR\src\main\java\org\seblax\utils\types\Triple.java

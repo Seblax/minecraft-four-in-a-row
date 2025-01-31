@@ -32,7 +32,7 @@ public class Game {
         this.winningLine = new ArrayList<>(); // List to store coordinates of the winning line
         this.canPlace = true; // Initially, players can place tiles
         // Randomly choose the first team to play
-        this.currentTurnTeam = Math.random() > 0.5 ? Data.Teams.manager.teamA : Data.Teams.manager.teamB;
+        this.currentTurnTeam = Math.random() > 0.5 ? Data.Teams.manager.getTeamA() : Data.Teams.manager.getTeamB();
         clearBoard(); // Clear the board at the start of the game
     }
 
@@ -364,7 +364,7 @@ public class Game {
      * @return The current team's value (1 or 2)
      */
     private int getCurrentTeamValue() {
-        return (currentTurnTeam.equals(Data.Teams.manager.teamA)) ? 1 : 2;
+        return (currentTurnTeam.equals(Data.Teams.manager.getTeamA())) ? 1 : 2;
     }
 
     /**
