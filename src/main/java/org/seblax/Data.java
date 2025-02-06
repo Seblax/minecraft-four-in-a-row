@@ -22,6 +22,10 @@ public class Data {
     public static class BOARD {
         public static int COLUMNS = 7;  // The number of columns in the game board
         public static int ROWS = 6;     // The number of rows in the game board
+
+        public double X;
+        public double Y;
+        public double Z;
     }
 
     /**

@@ -7,6 +7,7 @@ import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.profile.PlayerProfile;
+import org.seblax.Config;
 import org.seblax.Data;
 import org.seblax.Four;
 import org.seblax.animations.ArmorStandParticles;
@@ -23,12 +24,11 @@ import java.util.UUID;
  * Handles its appearance, animations, and properties like color and head texture.
  */
 public class ArmorStandUtil {
-    public static final String CONFIG_PATH = "playerscolors.yml";
-
     private final ArmorStandParticles particles;
     private final ArmorStandRotator rotator;
     private final UUID armorStandUUID;
     private final String name;
+    private final int teamID;
 
     private ArmorStand armorStand;
     private TeamColor currentColor;
@@ -40,14 +40,17 @@ public class ArmorStandUtil {
      * @param name  Name associated with the ArmorStand (team name).
      */
     public ArmorStandUtil(Coord coord, String name) {
-        int colorID = (int) new FileData(CONFIG_PATH, Four.getInstance().getDataFolder()).get(name.split(" ")[1]);
+        this.name = name;
+        this.teamID = Integer.parseInt(this.name.split(" ")[1]);
+        int colorID = Config.getColor(this.teamID);
+
         this.armorStand = (ArmorStand) Data.CURRENT_WORLD.spawnEntity(coord.toLocation(), EntityType.ARMOR_STAND);
         this.armorStandUUID = this.armorStand.getUniqueId();
         this.currentColor = TeamColor.of(colorID);
-        this.name = name;
 
         this.particles = new ArmorStandParticles(coord, this.currentColor.getColor());
         this.rotator = new ArmorStandRotator(this.armorStandUUID);
+
 
         initializeArmorStand();
         updateArmorStandSkin();
@@ -128,7 +131,7 @@ public class ArmorStandUtil {
         String helmet = currentColor.getColorName() + Data.TEAM_HEAD_ITEM;
         setHelmet(helmet.toUpperCase().trim());
 
-        new FileData(CONFIG_PATH, Four.getInstance().getDataFolder()).set(this.name.split(" ")[1], currentColor.getValue());
+        Config.setColor(this.teamID, currentColor.getValue());
     }
 
     /**
