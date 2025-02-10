@@ -9,7 +9,7 @@ import org.seblax.Data;
  */
 public class Coord extends Triple<Double> {
     // The yaw value, used to represent the horizontal rotation of the coordinate.
-    float yaw = 0f;
+    public float yaw = 0f;
 
     /**
      * Constructor to create a Coord object with x, y, and z values.
@@ -44,6 +44,22 @@ public class Coord extends Triple<Double> {
      */
     public Coord(Integer x, Integer y, Integer z) {
         super(x.doubleValue(), y.doubleValue(), z.doubleValue());  // Converts Integer to Double.
+    }
+
+    public Coord add(Coord coord){
+        return add(coord.x, coord.y, coord.z);
+    }
+
+    public Coord add(double x, double y, double z){
+        return new Coord(this.x + x, this.y + y, this.z + z);
+    }
+
+    /**
+     * Constructor to create a Coord with all value to zero.
+     *
+     */
+    public static Coord zero(){
+        return new Coord(0.,0.,0.);
     }
 
     /**

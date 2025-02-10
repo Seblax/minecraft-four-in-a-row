@@ -9,7 +9,6 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.profile.PlayerProfile;
 import org.seblax.Config;
 import org.seblax.Data;
-import org.seblax.Four;
 import org.seblax.animations.ArmorStandParticles;
 import org.seblax.animations.ArmorStandRotator;
 import org.seblax.team.TeamColor;

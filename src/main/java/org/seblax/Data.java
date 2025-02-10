@@ -12,20 +12,17 @@ import java.util.List;
  */
 public class Data {
 
-    public static World CURRENT_WORLD;  // The current world instance where the game takes place
-    public static String WORLD_PATH_FOLDER = "TNT 3 - Rework";  // The folder path for the world
+    public static World CURRENT_WORLD = Config.getWorld();  // The current world instance where the game takes place
     public static String TEAM_HEAD_ITEM = "_shulker_box";  // The item type for team heads (used in the game)
 
     /**
      * Nested class that contains board dimensions used for the game grid.
      */
     public static class BOARD {
-        public static int COLUMNS = 7;  // The number of columns in the game board
-        public static int ROWS = 6;     // The number of rows in the game board
+        public static int COLUMNS = Config.getColums();  // The number of columns in the game board
+        public static int ROWS = Config.getRows();     // The number of rows in the game board
 
-        public double X;
-        public double Y;
-        public double Z;
+        public static Coord BOARD_POSITION = Config.getCoord("board.position");
     }
 
     /**
@@ -71,22 +68,26 @@ public class Data {
      */
     public static class Teams {
 
-        // Starting coordinates for Team A
-        public static final Coord TEAM_A_START_COORD = new Coord(-237.5, 68.0, -45.5, -90);
+        public static class A{
+            // Starting coordinates for Team A
+            public static final Coord TEAM_START_COORD = Config.getCoord("team1.startPosition"); //new Coord(-237.5, 68.0, -45.5, -90);
 
-        // Starting coordinates for Team B
-        public static final Coord TEAM_B_START_COORD = new Coord(-225.5, 68.0, -45.5, 90);
+            // Coordinates for the armor stand of Team A
+            public static final Coord TEAM_ARMORSTAND_COORD = Config.getCoord("team1.armorStandPosition"); //(new Coord(-245.5, 65.0, -51.5);
+        }
+
+        public static class B{
+            // Starting coordinates for Team B
+            public static final Coord TEAM_START_COORD = Config.getCoord("team2.startPosition"); //(new Coord(-225.5, 68.0, -45.5, 90);
+
+            // Coordinates for the armor stand of Team B
+            public static final Coord TEAM_ARMORSTAND_COORD = Config.getCoord("team2.armorStandPosition"); //( new Coord(-245.5, 65.0, -39.5);
+        }
 
         // Coordinates for where teams will exit
-        public static final Coord TEAMS_EXIT_COORD = new Coord(-253.5, 65.0, -45.5, -90);
+        public static final Coord TEAMS_EXIT_COORD = Config.getCoord("exitPosition"); //(new Coord(-253.5, 65.0, -45.5, -90);
 
-        // Coordinates for the armor stand of Team A
-        public static final Coord TEAM_A_ARMORSTAND_COORD = new Coord(-245.5, 65.0, -51.5);
-
-        // Coordinates for the armor stand of Team B
-        public static final Coord TEAM_B_ARMORSTAND_COORD = new Coord(-245.5, 65.0, -39.5);
-
-        public static TeamsManager manager;  // The manager responsible for handling the teams in the game
+        public static TeamsManager MANAGER;  // The manager responsible for handling the teams in the game
     }
 }
 

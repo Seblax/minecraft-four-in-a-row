@@ -15,6 +15,7 @@ public class FileData {
 
     private final YamlConfiguration configFile;
     private final File file;
+    private final boolean empty;
 
     /**
      * Initializes a new FileData instance.
@@ -33,6 +34,7 @@ public class FileData {
         }
 
         this.file = new File(pluginDirectory, fileName);
+        empty = !this.file.exists();
 
         // Create file if it does not exist
         if (!file.exists()) {
@@ -57,6 +59,10 @@ public class FileData {
         return file.exists();
     }
 
+    public boolean isEmpty(){
+        return this.empty;
+    }
+
     /**
      * Saves a key-value pair to the YAML file.
      *
@@ -76,6 +82,49 @@ public class FileData {
      */
     public synchronized Object get(String key) {
         return configFile.get(key);
+    }
+
+
+    /**
+     * Saves a key-int pair to the YAML file.
+     *
+     * @param key   The configuration key.
+     * @param value The value to be stored.
+     */
+    public synchronized void setInt(String key, Integer value) {
+        configFile.set(key, value);
+        save();
+    }
+
+    /**
+     * Retrieves a int value from the YAML file.
+     *
+     * @param key The configuration key.
+     * @return The stored value, or null if the key is not found.
+     */
+    public synchronized Integer getInt(String key) {
+        return configFile.getInt(key);
+    }
+
+    /**
+     * Saves a key-double pair to the YAML file.
+     *
+     * @param key   The configuration key.
+     * @param value The value to be stored.
+     */
+    public synchronized void setDouble(String key, Double value) {
+        configFile.set(key, value);
+        save();
+    }
+
+    /**
+     * Retrieves a double value from the YAML file.
+     *
+     * @param key The configuration key.
+     * @return The stored value, or null if the key is not found.
+     */
+    public synchronized Double getDouble(String key) {
+        return configFile.getDouble(key);
     }
 
     /**

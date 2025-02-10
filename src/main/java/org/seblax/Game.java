@@ -22,7 +22,7 @@ public class Game {
     private boolean canPlace; // Flag to check if players can place tiles on the board
 
     private static final int WINNING_COUNT = 4; // The number of tiles needed in a row to win
-    private static final Location CENTER_LOCATION = new Coord(-232, 68, -46).toLocation(); // Center location for sound and particle effects
+    private static final Location CENTER_LOCATION = Data.BOARD.BOARD_POSITION.add(new Coord(0, Data.BOARD.ROWS, Data.BOARD.COLUMNS)).toLocation(); // Center location for sound and particle effects
 
     /**
      * Constructs a new game, initializing the board and setting the first team randomly.
@@ -32,7 +32,7 @@ public class Game {
         this.winningLine = new ArrayList<>(); // List to store coordinates of the winning line
         this.canPlace = true; // Initially, players can place tiles
         // Randomly choose the first team to play
-        this.currentTurnTeam = Math.random() > 0.5 ? Data.Teams.manager.getTeamA() : Data.Teams.manager.getTeamB();
+        this.currentTurnTeam = Math.random() > 0.5 ? Data.Teams.MANAGER.getTeamA() : Data.Teams.MANAGER.getTeamB();
         clearBoard(); // Clear the board at the start of the game
     }
 
@@ -43,7 +43,7 @@ public class Game {
         for (int i = 0; i < Data.BOARD.COLUMNS; i++) {
             for (int j = 0; j < Data.BOARD.ROWS; j++) {
                 board[i][j] = 0; // Reset the board values
-                Location loc = new Location(Data.CURRENT_WORLD, -232, 69 + j, -43 - i); // Location of the block to clear
+                Location loc = Data.BOARD.BOARD_POSITION.add( 0, j, i).toLocation(); // Location of the block to clear
                 loc.getBlock().setType(Material.AIR); // Remove the block
             }
         }
@@ -53,16 +53,15 @@ public class Game {
      * Places a tile for the current team in the specified column.
      *
      * @param x         The column where the tile should be placed
-     * @param offset    The vertical offset of the tile
      * @param colorName The color name for the tile
      * @return True if the tile was placed successfully, false if the column is full
      */
-    public boolean setTile(int x, int offset, String colorName) {
+    public boolean setTile(int x, String colorName) {
         if (!isColumnAvailable(x)) return false; // Check if the column is available
 
         for (int j = 0; j < Data.BOARD.ROWS; j++) {
             if (board[x][j] == 0) { // Find the first available row in the column
-                summonFallingSand(offset, colorName); // Summon a falling block for the tile
+                summonFallingSand(x, colorName); // Summon a falling block for the tile
                 board[x][j] = getCurrentTeamValue(); // Mark the board with the current team's value
                 return true;
             }
@@ -119,7 +118,7 @@ public class Game {
         }
 
         this.canPlace = true; // Allow the next player to place a tile
-        this.currentTurnTeam = Data.Teams.manager.getEnemyTeamByUUID(this.currentTurnTeam); // Switch the turn to the opposing team
+        this.currentTurnTeam = Data.Teams.MANAGER.getEnemyTeamByUUID(this.currentTurnTeam); // Switch the turn to the opposing team
     }
 
     /**
@@ -146,7 +145,7 @@ public class Game {
      */
     private void highlightWinningLine() {
         for (Coord c : winningLine) {
-            Location loc = new Location(Data.CURRENT_WORLD, -232, 69 + c.y, -43 - c.z); // Get the location of each winning tile
+            Location loc = Data.BOARD.BOARD_POSITION.add(0, c.y, Data.BOARD.COLUMNS - c.z).toLocation(); // Get the location of each winning tile
             loc.getBlock().setType(Material.EMERALD_BLOCK); // Turn the tile into an emerald block
             // Spawn happy villager particles around the winning tile
             Data.CURRENT_WORLD.spawnParticle(Particle.HAPPY_VILLAGER, loc.add(0.5, 0.5, 0.5), 100, 0.5, 0.5, 0.5);
@@ -245,9 +244,9 @@ public class Game {
         int tileValue = getCurrentTeamValue(); // Get the current team's tile value
 
         // Check for a horizontal line
-        if (Data.BOARD.COLUMNS - x >= 4) {
+        if (Data.BOARD.COLUMNS - x >= WINNING_COUNT) {
             row = true;
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < WINNING_COUNT; i++) {
                 if (getTile(x + i, y) != tileValue) { // Check if the tiles match
                     row = false; // If not, break the loop
                     break;
@@ -256,16 +255,16 @@ public class Game {
 
             if (row) {
                 // If a horizontal line is found, store the coordinates of the winning tiles
-                for (int i = 0; i < 4; i++) {
+                for (int i = 0; i < WINNING_COUNT; i++) {
                     winningLine.add(new Coord(0, y, x + i));
                 }
             }
         }
 
         // Check for a vertical line
-        if (Data.BOARD.ROWS - y >= 4) {
+        if (Data.BOARD.ROWS - y >= WINNING_COUNT) {
             column = true;
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < WINNING_COUNT; i++) {
                 if (getTile(x, y + i) != tileValue) {
                     column = false; // If not, break the loop
                     break;
@@ -274,7 +273,7 @@ public class Game {
 
             if (column) {
                 // If a vertical line is found, store the coordinates of the winning tiles
-                for (int i = 0; i < 4; i++) {
+                for (int i = 0; i < WINNING_COUNT; i++) {
                     winningLine.add(new Coord(0, y + i, x));
                 }
             }
@@ -284,7 +283,7 @@ public class Game {
     }
 
     /**
-     * Checks for a diagonal line of 4 matching tiles starting from a given position.
+     * Checks for a diagonal line of WINNING_COUNT matching tiles starting from a given position.
      *
      * @param x The column index to start checking from
      * @param y The row index to start checking from
@@ -296,9 +295,9 @@ public class Game {
         boolean diagonalSecundaria = false;
 
         // Check the main diagonal (top-left to bottom-right)
-        if (Data.BOARD.COLUMNS - x >= 4 && Data.BOARD.ROWS - y >= 4) {
+        if (Data.BOARD.COLUMNS - x >= WINNING_COUNT && Data.BOARD.ROWS - y >= WINNING_COUNT) {
             diagonalPrincipal = true;
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < WINNING_COUNT; i++) {
                 if (getTile(x + i, y + i) != getCurrentTeamValue()) {
                     diagonalPrincipal = false; // If the tiles don't match, break the loop
                     break;
@@ -307,16 +306,16 @@ public class Game {
 
             if (diagonalPrincipal) {
                 // If the main diagonal is found, store the coordinates of the winning tiles
-                for (int i = 0; i < 4; i++) {
+                for (int i = 0; i < WINNING_COUNT; i++) {
                     winningLine.add(new Coord(0, y + i, x + i));
                 }
             }
         }
 
         // Check the secondary diagonal (top-right to bottom-left)
-        if (x >= 3 && Data.BOARD.ROWS - y >= 4) {
+        if (x >= 3 && Data.BOARD.ROWS - y >= WINNING_COUNT) {
             diagonalSecundaria = true;
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < WINNING_COUNT; i++) {
                 if (getTile(x - i, y + i) != getCurrentTeamValue()) {
                     diagonalSecundaria = false; // If the tiles don't match, break the loop
                     break;
@@ -325,7 +324,7 @@ public class Game {
 
             if (diagonalSecundaria) {
                 // If the secondary diagonal is found, store the coordinates of the winning tiles
-                for (int i = 0; i < 4; i++) {
+                for (int i = 0; i < WINNING_COUNT; i++) {
                     winningLine.add(new Coord(0, y + i, x - i));
                 }
             }
@@ -364,7 +363,7 @@ public class Game {
      * @return The current team's value (1 or 2)
      */
     private int getCurrentTeamValue() {
-        return (currentTurnTeam.equals(Data.Teams.manager.getTeamA())) ? 1 : 2;
+        return (currentTurnTeam.equals(Data.Teams.MANAGER.getTeamA())) ? 1 : 2;
     }
 
     /**
@@ -374,7 +373,8 @@ public class Game {
      * @param colorName The color of the block to be placed
      */
     private void summonFallingSand(int offset, String colorName) {
-        Location fallingBlockLocation = new Coord(-231.5, 76., offset + 0.5).toLocation(); // Location where the falling block will appear
+        Location fallingBlockLocation = Data.BOARD.BOARD_POSITION.add(0.5, 7, offset + 0.5).toLocation(); // Location where the falling block will appear
+        System.out.println(fallingBlockLocation);
         Material material = Material.valueOf((colorName + "_concrete_powder").toUpperCase()); // Set the material type based on the color name
         FallingBlock fallingBlock = Data.CURRENT_WORLD.spawnFallingBlock(fallingBlockLocation, material.createBlockData()); // Spawn the falling block
         fallingBlock.addScoreboardTag("4x4"); // Add a custom scoreboard tag for the block

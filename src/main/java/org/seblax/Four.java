@@ -7,8 +7,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.seblax.animations.AnimatorManager;
 import org.seblax.team.TeamsManager;
-import org.seblax.utils.ArmorStandUtil;
-import org.seblax.utils.FileData;
 
 public final class Four extends JavaPlugin {
 
@@ -28,10 +26,12 @@ public final class Four extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+
+        loadConfiguration();
+
         removeAllArmorStands();
 
         // Load or create configuration file
-        loadConfiguration();
 
         registerEvents();
         initializeGame();
@@ -46,12 +46,7 @@ public final class Four extends JavaPlugin {
      * Loads the configuration file and initializes default values if needed.
      */
     private void loadConfiguration() {
-        FileData save = new FileData(ArmorStandUtil.CONFIG_PATH, getDataFolder());
-
-        if (!save.exists()) {
-            save.set("1", 1);
-            save.set("2", 2);
-        }
+        Config.initialize();
     }
 
     /**
@@ -66,19 +61,11 @@ public final class Four extends JavaPlugin {
      * Initializes the game, ensuring the world and team managers are set up.
      */
     public static void initializeGame() {
-        World world = Bukkit.getWorld(Data.WORLD_PATH_FOLDER);
-
-        if (world == null) {
-            Bukkit.getLogger().warning("[Four] Couldn't find world folder: " + Data.WORLD_PATH_FOLDER);
-            return;
-        }
-
-        Data.CURRENT_WORLD = world;
-        Data.Teams.manager = new TeamsManager();
+        Data.Teams.MANAGER = new TeamsManager();
 
         animatorManager = new AnimatorManager();
-        animatorManager.addArmorStand(Data.Teams.manager.getTeamA().getArmorStandUtil());
-        animatorManager.addArmorStand(Data.Teams.manager.getTeamB().getArmorStandUtil());
+        animatorManager.addArmorStand(Data.Teams.MANAGER.getTeamA().getArmorStandUtil());
+        animatorManager.addArmorStand(Data.Teams.MANAGER.getTeamB().getArmorStandUtil());
         animatorManager.startAnimation();
     }
 
@@ -86,11 +73,11 @@ public final class Four extends JavaPlugin {
      * Removes all armor stands associated with the game when enabling/disabling the plugin.
      */
     private void removeAllArmorStands() {
-        if (Data.Teams.manager != null) {
-            Data.Teams.manager.remove();
+        if (Data.Teams.MANAGER != null) {
+            Data.Teams.MANAGER.remove();
         }
 
-        World world = Bukkit.getWorld("TNT 3 - Rework");
+        World world = Data.CURRENT_WORLD;
         if (world == null) {
             Bukkit.getLogger().warning("[Four] Could not find world 'TNT 3 - Rework' for armor stand cleanup.");
             return;

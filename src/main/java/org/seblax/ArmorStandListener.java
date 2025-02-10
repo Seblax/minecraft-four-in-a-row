@@ -32,7 +32,7 @@ public class ArmorStandListener implements Listener {
             }
 
             event.setCancelled(true);  // Cancel the event to prevent default behavior (e.g., mounting, etc.)
-            Data.Teams.manager.selectTeam(armorStand.getUniqueId());  // Call the TeamSelected method with the armor stand's unique ID
+            Data.Teams.MANAGER.selectTeam(armorStand.getUniqueId());  // Call the TeamSelected method with the armor stand's unique ID
         }
     }
 }

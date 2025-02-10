@@ -22,10 +22,10 @@ import org.seblax.utils.SoundManager;
 public class GameListener implements Listener {
     private final JavaPlugin plugin;
     private static final double TEAM_JOIN_RADIUS = 0.5;
-    private static final int COLUMN_X_LEFT = -235;
-    private static final int COLUMN_X_RIGHT = -229;
-    private static final int MIN_Z = -49;
-    private static final int MAX_Z = -43;
+    private static final Integer COLUMN_X_LEFT = (int)(Data.BOARD.BOARD_POSITION.x + 3);
+    private static final Integer COLUMN_X_RIGHT = (int)(Data.BOARD.BOARD_POSITION.x - 3);
+    private static final Integer MIN_Z = Data.BOARD.BOARD_POSITION.z.intValue();
+    private static final Integer MAX_Z = (int)(Data.BOARD.BOARD_POSITION.z + Data.BOARD.COLUMNS - 1);
 
     public GameListener(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -45,7 +45,7 @@ public class GameListener implements Listener {
         event.setCancelled(true);
 
         if (item.getType() == Material.BARRIER) {
-            Data.Teams.manager.playerLeavesTeam(player);
+            Data.Teams.MANAGER.playerLeavesTeam(player);
         }
     }
 
@@ -58,7 +58,7 @@ public class GameListener implements Listener {
         Location location = player.getLocation();
 
         if (isNearTeamBase(location)) {
-            Data.Teams.manager.playerJoinsTeam(player);
+            Data.Teams.MANAGER.playerJoinsTeam(player);
         }
     }
 
@@ -66,8 +66,8 @@ public class GameListener implements Listener {
      * Checks if a player is near either team's base.
      */
     private boolean isNearTeamBase(Location playerLocation) {
-        return Data.Teams.TEAM_A_ARMORSTAND_COORD.toLocation().distance(playerLocation) <= TEAM_JOIN_RADIUS ||
-                Data.Teams.TEAM_B_ARMORSTAND_COORD.toLocation().distance(playerLocation) <= TEAM_JOIN_RADIUS;
+        return Data.Teams.A.TEAM_ARMORSTAND_COORD.toLocation().distance(playerLocation) <= TEAM_JOIN_RADIUS ||
+                Data.Teams.B.TEAM_ARMORSTAND_COORD.toLocation().distance(playerLocation) <= TEAM_JOIN_RADIUS;
     }
 
     /**
@@ -89,7 +89,7 @@ public class GameListener implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        Team team = Data.Teams.manager.getTeamByPlayer(player);
+        Team team = Data.Teams.MANAGER.getTeamByPlayer(player);
         if (team != null) {
             team.resetTeam();
         }
@@ -111,8 +111,12 @@ public class GameListener implements Listener {
 
         if (z < MIN_Z || z > MAX_Z) return;
 
-        int position = MAX_Z - z;
+        int position =  z - MIN_Z;
         Team playerTeam = Four.game.getCurrentTurnTeam();
+
+        System.out.println("Position: " + position);
+        System.out.println("Z: " + z);
+        System.out.println("MIN_Z: " + MIN_Z);
 
         if (!Four.game.canPlace() || !playerTeam.isPlayersTeam(player)) {
             sendErrorMessage(player, "It's not your turn yet!");
@@ -120,7 +124,7 @@ public class GameListener implements Listener {
         }
 
         boolean placed = (x == COLUMN_X_LEFT || x == COLUMN_X_RIGHT) &&
-                Four.game.setTile(position, z, playerTeam.getTeamColor().getColorName());
+                Four.game.setTile(position, playerTeam.getTeamColor().getColorName());
 
         if (!placed) {
             sendErrorMessage(player, "You can't place a piece in this column!");

@@ -20,8 +20,8 @@ public class TeamsManager {
      * Initializes the TeamsManager with predefined teams.
      */
     public TeamsManager() {
-        this.teamA = new Team(Data.Teams.TEAM_A_ARMORSTAND_COORD, "Player 1", Data.SCENARIO_TEAM.A, Data.Teams.TEAM_A_START_COORD);
-        this.teamB = new Team(Data.Teams.TEAM_B_ARMORSTAND_COORD, "Player 2", Data.SCENARIO_TEAM.B, Data.Teams.TEAM_B_START_COORD);
+        this.teamA = new Team(Data.Teams.A.TEAM_ARMORSTAND_COORD, "Player 1", Data.SCENARIO_TEAM.A, Data.Teams.A.TEAM_START_COORD);
+        this.teamB = new Team(Data.Teams.B.TEAM_ARMORSTAND_COORD, "Player 2", Data.SCENARIO_TEAM.B, Data.Teams.B.TEAM_START_COORD);
     }
 
     public Team getTeamA(){
@@ -104,8 +104,8 @@ public class TeamsManager {
     public void playerJoinsTeam(Player player) {
         if (player == null) return;
 
-        Team playerTeam = (player.getLocation().distance(Data.Teams.TEAM_A_ARMORSTAND_COORD.toLocation()) <
-                player.getLocation().distance(Data.Teams.TEAM_B_ARMORSTAND_COORD.toLocation())) ? teamA : teamB;
+        Team playerTeam = (player.getLocation().distance(Data.Teams.A.TEAM_ARMORSTAND_COORD.toLocation()) <
+                player.getLocation().distance(Data.Teams.B.TEAM_ARMORSTAND_COORD.toLocation())) ? teamA : teamB;
 
         playerTeam.lock(player);
         playPlayerJoinSounds(player);
