@@ -1,0 +1,38 @@
+team1:
+  startPosition:
+    x: -237.5
+    y: 68.0
+    z: -45.5
+    yaw: -90.0
+  armorStandPosition:
+    x: -245.5
+    y: 65.0
+    z: -51.5
+    yaw: 0.0
+  color: 1
+team2:
+  startPosition:
+    x: -225.5
+    y: 68.0
+    z: -45.5
+    yaw: 90
+  armorStandPosition:
+    x: -245.5
+    y: 65.0
+    z: -39.5
+    yaw: 0.0
+  color: 3
+board:
+  columns: 7
+  rows: 6
+  position:
+    x: -232
+    y: 69
+    z: -49
+    yaw: 0.0
+world: world
+exitPosition:
+  x: -253.5
+  y: 65.0
+  z: -45.5
+  yaw: -90.0
