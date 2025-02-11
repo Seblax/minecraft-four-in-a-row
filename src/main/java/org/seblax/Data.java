@@ -19,7 +19,7 @@ public class Data {
      * Nested class that contains board dimensions used for the game grid.
      */
     public static class BOARD {
-        public static int COLUMNS = Config.getColums();  // The number of columns in the game board
+        public static int COLUMNS = Config.getColumns();  // The number of columns in the game board
         public static int ROWS = Config.getRows();     // The number of rows in the game board
 
         public static Coord BOARD_POSITION = Config.getCoord("board.position");

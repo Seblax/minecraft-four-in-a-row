@@ -128,6 +128,16 @@ public class FileData {
     }
 
     /**
+     * Retrieves a boolean value from the YAML file.
+     *
+     * @param path The value's path.
+     * @return True or false if the path is not found.
+     */
+    public boolean contains(String path){
+        return configFile.contains(path);
+    }
+
+    /**
      * Retrieves a value from the YAML file with a default fallback.
      *
      * @param key          The configuration key.
@@ -150,6 +160,7 @@ public class FileData {
             LOGGER.log(Level.SEVERE, "Error saving file: " + file.getAbsolutePath(), e);
         }
     }
+
 }
 
 //package org.seblax.utils;
