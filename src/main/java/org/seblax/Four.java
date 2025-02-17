@@ -73,10 +73,6 @@ public final class Four extends JavaPlugin {
      * Removes all armor stands associated with the game when enabling/disabling the plugin.
      */
     private void removeAllArmorStands() {
-        if (Data.Teams.MANAGER != null) {
-            Data.Teams.MANAGER.remove();
-        }
-
         World world = Data.CURRENT_WORLD;
         if (world == null) {
             Bukkit.getLogger().warning("[Four] Could not find world 'TNT 3 - Rework' for armor stand cleanup.");
@@ -87,6 +83,11 @@ public final class Four extends JavaPlugin {
                 .filter(entity -> entity instanceof ArmorStand)
                 .filter(entity -> entity.getScoreboardTags().contains("4x4"))
                 .forEach(Entity::remove);
+
+        if (Data.Teams.MANAGER != null) {
+            Data.Teams.MANAGER.remove();
+        }
+
     }
 }
 

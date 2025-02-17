@@ -1,6 +1,8 @@
 package org.seblax;
 
 import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockType;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.seblax.team.Team;
@@ -22,7 +24,7 @@ public class Game {
     private boolean canPlace; // Flag to check if players can place tiles on the board
 
     private static final int WINNING_COUNT = 4; // The number of tiles needed in a row to win
-    private static final Location CENTER_LOCATION = Data.BOARD.BOARD_POSITION.add(new Coord(0, Data.BOARD.ROWS, Data.BOARD.COLUMNS)).toLocation(); // Center location for sound and particle effects
+    private static final Location CENTER_LOCATION = Data.BOARD.BOARD_POSITION.add(new Coord(0, Data.BOARD.ROWS/2, Data.BOARD.COLUMNS/2)).toLocation(); // Center location for sound and particle effects
 
     /**
      * Constructs a new game, initializing the board and setting the first team randomly.
@@ -40,13 +42,25 @@ public class Game {
      * Clears the board by resetting all tiles and removing blocks in the world.
      */
     public void clearBoard() {
+        boolean erased = false;
+
         for (int i = 0; i < Data.BOARD.COLUMNS; i++) {
             for (int j = 0; j < Data.BOARD.ROWS; j++) {
                 board[i][j] = 0; // Reset the board values
                 Location loc = Data.BOARD.BOARD_POSITION.add( 0, j, i).toLocation(); // Location of the block to clear
-                loc.getBlock().setType(Material.AIR); // Remove the block
+                Block block = loc.getBlock(); // Remove the block
+
+                if(block.getType() != Material.AIR){
+                    erased = true;
+                    block.setType(Material.AIR);
+                }
             }
         }
+
+        if(!erased) return;
+
+        Data.CURRENT_WORLD.spawnParticle(Particle.CAMPFIRE_COSY_SMOKE,CENTER_LOCATION,50, 1, (double) Config.getRows() /2, (double) Config.getColumns() /2, 0);
+        SoundManager.playSound(CENTER_LOCATION,Sound.ENTITY_GUARDIAN_DEATH, SoundCategory.AMBIENT, 0.5f);
     }
 
     /**
@@ -158,7 +172,7 @@ public class Game {
     private void displayWinMessage() {
         TeamColor winnerColor = currentTurnTeam.getTeamColor(); // Get the color of the winning team
         String title = ChatColor.DARK_GREEN + "-=" + winnerColor.getChatColor() + ChatColor.BOLD + "Player " + winnerColor.getColorName() + ChatColor.DARK_GREEN + "=-";
-        String subtitle = ChatColor.DARK_GREEN + "-=" + ChatColor.GOLD + ChatColor.BOLD + "WIN" + ChatColor.DARK_GREEN + "=-";
+        String subtitle = ChatColor.DARK_GREEN + "-=" + ChatColor.GOLD + ChatColor.BOLD + "WIN" + ChatColor.RESET + ChatColor.DARK_GREEN + "=-";
         sendTitleToPlayers(title, subtitle); // Send the win message to nearby players
     }
 
@@ -166,7 +180,7 @@ public class Game {
      * Displays a draw message to the players when the game ends in a tie.
      */
     private void displayDrawMessage() {
-        String title = ChatColor.GOLD + "-= DRAW =-"; // Title for the draw message
+        String title = ChatColor.DARK_AQUA + "-=" + ChatColor.GOLD + ChatColor.BOLD + "DRAW" + ChatColor.DARK_AQUA + "=-";
         sendTitleToPlayers(title, title); // Send the draw message to players
     }
 
@@ -203,7 +217,7 @@ public class Game {
      */
     private void sendTitleToPlayers(String title, String subtitle) {
         List<Player> players = Bukkit.getOnlinePlayers().stream()
-                .filter(p -> p.getLocation().distance(CENTER_LOCATION) <= 10) // Get players within 10 blocks of the center location
+                .filter(p -> p.getLocation().distance(CENTER_LOCATION) <= 15) // Get players within 10 blocks of the center location
                 .map(OfflinePlayer::getPlayer)
                 .toList();
 

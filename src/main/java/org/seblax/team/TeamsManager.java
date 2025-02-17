@@ -107,6 +107,8 @@ public class TeamsManager {
         Team playerTeam = (player.getLocation().distance(Data.Teams.A.TEAM_ARMORSTAND_COORD.toLocation()) <
                 player.getLocation().distance(Data.Teams.B.TEAM_ARMORSTAND_COORD.toLocation())) ? teamA : teamB;
 
+        if (playerTeam.isLocked()) return;
+
         playerTeam.lock(player);
         playPlayerJoinSounds(player);
     }
